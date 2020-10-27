@@ -6,22 +6,29 @@ import {
   LinkOutlined,
   FieldTimeOutlined,
 } from '@ant-design/icons';
+import Tooltip from 'app/components/Tooltip';
 
-const Board = ({ title, description }) => {
+const Board = ({ name, time }) => {
   return (
     <StyledBoard
       actions={[
-        <LinkOutlined key="url" />,
-        <CopyOutlined key="copy" />,
-        <EllipsisOutlined key="ellipsis" />,
+        <Tooltip placement="bottom" title="Url">
+          <LinkOutlined key="url" />
+        </Tooltip>,
+        <Tooltip placement="bottom" title="Clone">
+          <CopyOutlined key="copy" />
+        </Tooltip>,
+        <Tooltip placement="bottom" title="More">
+          <EllipsisOutlined key="ellipsis" />
+        </Tooltip>,
       ]}
     >
       <StyledBoard.Meta
-        title={title}
+        title={name}
         description={
           <div className="description">
             <FieldTimeOutlined />
-            <span className="time">{description}</span>
+            <span className="time">{time}</span>
           </div>
         }
       />

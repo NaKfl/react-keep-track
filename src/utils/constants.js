@@ -1,0 +1,5 @@
+export const ACTION_STATUS = {
+  PENDING: 'PENDING',
+  SUCCESS: 'SUCCESS',
+  FAILED: 'FAILED',
+};

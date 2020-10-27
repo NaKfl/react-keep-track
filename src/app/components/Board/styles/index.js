@@ -15,4 +15,10 @@ export const StyledBoard = styled(Card)`
       margin-left: 5px;
     }
   }
+
+  .ant-card-actions {
+    li span span svg {
+      color: ${COLOR.SECONDARY};
+    }
+  }
 `;

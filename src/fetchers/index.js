@@ -1,5 +1,5 @@
 import axios from 'axios';
-import isNil from 'loadash/fp/isNil';
+import isNil from 'lodash/fp/isNil';
 // import { getAccessToken } from 'utils/localStorageUtils';
 
 const createClient = baseURL =>
