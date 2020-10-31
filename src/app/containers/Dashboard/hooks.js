@@ -13,6 +13,7 @@ const useHooks = () => {
   );
 
   useEffect(() => getBoards(), [getBoards]);
+
   return {
     handlers: {},
     selectors: {

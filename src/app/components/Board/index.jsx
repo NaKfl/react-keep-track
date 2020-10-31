@@ -8,9 +8,10 @@ import {
 } from '@ant-design/icons';
 import Tooltip from 'app/components/Tooltip';
 
-const Board = ({ name, time }) => {
+const Board = ({ name, time, ...rest }) => {
   return (
     <StyledBoard
+      {...rest}
       actions={[
         <Tooltip placement="bottom" title="Url">
           <LinkOutlined key="url" />

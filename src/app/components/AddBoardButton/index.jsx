@@ -7,7 +7,7 @@ import {
 
 const AddBoardButton = props => {
   return (
-    <StyledAddBoardButton>
+    <StyledAddBoardButton {...props}>
       <StyledAddBoardIcon />
       <StyledAddBoardTitle>Add board</StyledAddBoardTitle>
     </StyledAddBoardButton>

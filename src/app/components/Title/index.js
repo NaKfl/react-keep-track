@@ -1,8 +1,12 @@
 import React from 'react';
 import { StyledTitle } from './styles';
 
-const Title = ({ children }) => {
-  return <StyledTitle level={2}>{children}</StyledTitle>;
+const Title = ({ children, ...rest }) => {
+  return (
+    <StyledTitle level={2} {...rest}>
+      {children}
+    </StyledTitle>
+  );
 };
 
 export default Title;

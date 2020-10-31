@@ -1,10 +1,13 @@
 import { WEB_API as BASE_URL } from 'configs';
 import request, { handleGeneralError } from './index';
 
-export const getBoards = () => {
+export const login = payload => {
   return request(BASE_URL, {
-    url: 'boards',
-    method: 'GET',
+    url: 'auth/login',
+    method: 'POST',
+    data: {
+      ...payload,
+    },
   })
     .then(response => response.data)
     .then(data => ({ response: data }))
