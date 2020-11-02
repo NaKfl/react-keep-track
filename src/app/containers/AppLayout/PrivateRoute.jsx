@@ -1,11 +1,11 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
-// import {isAuthenticated} from 'utils/localStorageUtils';
+import { isAuthenticated } from 'utils/localStorageUtils';
 
 //TODO
 const PrivateRoute = ({ component, layout: Layout, ...rest }) => {
   const renderFn = Component => props => {
-    if (!!Component /*&& isAuthenticated()*/) {
+    if (!!Component && isAuthenticated()) {
       return (
         <Layout>
           <Component {...props} />

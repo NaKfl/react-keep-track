@@ -1,9 +1,10 @@
 import React, { memo } from 'react';
 import { useInjectSaga } from 'utils/reduxInjectors';
 import saga from './saga';
-import useHooks from './hooks';
+import useHooks, { useMessage } from './hooks';
 import { sliceKey } from './slice';
 import { Link } from 'react-router-dom';
+import { ACTION_STATUS } from 'utils/constants';
 import {
   StyledLogin,
   StyledGoogleButton,
@@ -13,13 +14,14 @@ import Form from 'app/components/Form';
 import Button from 'app/components/Button';
 import Input from 'app/components/Input';
 import Title from 'app/components/Title';
-import { UserOutlined, LockOutlined } from '@ant-design/icons';
+import { MailOutlined, LockOutlined } from '@ant-design/icons';
 
 export const Login = () => {
+  useMessage();
   useInjectSaga({ key: sliceKey, saga });
   const { handlers, selectors } = useHooks();
   const { onFinish, onFinishFailed } = handlers;
-  const {} = selectors;
+  const { status } = selectors;
 
   return (
     <StyledLogin>
@@ -30,18 +32,21 @@ export const Login = () => {
       >
         <Title className="login-form-title">Login</Title>
         <Form.Item
-          name="username"
+          name="email"
           rules={[
             {
+              type: 'email',
+              message: 'The input is not valid E-mail!',
+            },
+            {
               required: true,
-              message: 'Please input your Username!',
+              message: 'Please input your Email!',
             },
           ]}
         >
-          <Input prefix={<UserOutlined />} placeholder="Username" />
+          <Input prefix={<MailOutlined />} placeholder="Email" />
         </Form.Item>
         <Form.Item
-          className="login-form-password"
           name="password"
           rules={[
             {
@@ -61,7 +66,11 @@ export const Login = () => {
         </Form.Item>
 
         <Form.Item className="login-form-button login-form-button-local">
-          <Button type="primary" htmlType="submit">
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={status === ACTION_STATUS.PENDING}
+          >
             Login
           </Button>
         </Form.Item>

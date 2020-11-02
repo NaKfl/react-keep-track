@@ -11,12 +11,12 @@ import { App } from 'app';
 import { HelmetProvider } from 'react-helmet-async';
 import { configureAppStore } from 'store/configureStore';
 
-//TODO
-// import { isAuthenticated } from 'utils/localStorageUtils';
+import { isAuthenticated } from 'utils/localStorageUtils';
+
 const initialState = {
-  //   authentication: {
-  //     isAuthenticated: isAuthenticated(),
-  //   },
+  authentication: {
+    isAuthenticated: isAuthenticated(),
+  },
 };
 
 const store = configureAppStore(initialState);

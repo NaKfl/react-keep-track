@@ -34,6 +34,10 @@ const authenticationSlice = createSlice({
     },
 
     logout(state) {
+      return state;
+    },
+
+    logoutSuccess(state) {
       return flow(
         set('isAuthenticated', false),
         set('status', ''),

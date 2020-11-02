@@ -42,13 +42,10 @@ export const StyledLogin = styled.div`
       margin-bottom: 24px;
     }
 
-    &-password {
-      margin-bottom: 5px;
-    }
-
     &-forgot {
       align-self: flex-end;
       margin-bottom: 5px;
+      margin-top: -19px;
     }
 
     &-button {
