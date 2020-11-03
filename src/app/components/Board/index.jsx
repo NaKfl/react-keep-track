@@ -2,13 +2,14 @@ import React from 'react';
 import { StyledBoard } from './styles';
 import {
   CopyOutlined,
-  EllipsisOutlined,
   LinkOutlined,
+  DeleteOutlined,
   FieldTimeOutlined,
 } from '@ant-design/icons';
 import Tooltip from 'app/components/Tooltip';
+import Popconfirm from 'app/components/Popconfirm';
 
-const Board = ({ name, time, ...rest }) => {
+const Board = ({ name, id, time, handleDelete, ...rest }) => {
   return (
     <StyledBoard
       {...rest}
@@ -16,12 +17,21 @@ const Board = ({ name, time, ...rest }) => {
         <Tooltip placement="bottom" title="Url">
           <LinkOutlined key="url" />
         </Tooltip>,
+
         <Tooltip placement="bottom" title="Clone">
           <CopyOutlined key="copy" />
         </Tooltip>,
-        <Tooltip placement="bottom" title="More">
-          <EllipsisOutlined key="ellipsis" />
-        </Tooltip>,
+
+        <Popconfirm
+          title="Are you sure delete this board?"
+          onConfirm={() => handleDelete(id)}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Tooltip placement="bottom" title="Delete">
+            <DeleteOutlined key="delete" />
+          </Tooltip>
+        </Popconfirm>,
       ]}
     >
       <StyledBoard.Meta

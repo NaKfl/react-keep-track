@@ -10,3 +10,24 @@ export const getBoards = () => {
     .then(data => ({ response: data }))
     .catch(handleGeneralError);
 };
+
+export const createBoard = payload => {
+  return request(BASE_URL, {
+    url: 'boards',
+    method: 'POST',
+    data: payload,
+  })
+    .then(response => response.data)
+    .then(data => ({ response: data }))
+    .catch(handleGeneralError);
+};
+
+export const deleteBoard = id => {
+  return request(BASE_URL, {
+    url: `boards/${id}`,
+    method: 'DELETE',
+  })
+    .then(response => response.data)
+    .then(data => ({ response: data }))
+    .catch(handleGeneralError);
+};

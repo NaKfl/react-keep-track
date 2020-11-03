@@ -4,7 +4,7 @@ export function notifyError(message) {
   notification.error({
     message: message,
     placement: 'topRight',
-    top: 64,
+    top: 90,
   });
 }
 
@@ -12,6 +12,6 @@ export function notifySuccess(message) {
   notification.success({
     message: message,
     placement: 'topRight',
-    top: 64,
+    top: 90,
   });
 }

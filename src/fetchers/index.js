@@ -1,14 +1,13 @@
 import axios from 'axios';
 import isNil from 'lodash/fp/isNil';
-// import { getAccessToken } from 'utils/localStorageUtils';
+import { getAccessToken } from 'utils/localStorageUtils';
 
 const createClient = baseURL =>
   axios.create({
     baseURL,
     headers: {
       'Content-Type': 'application/json',
-      //TODO
-      // Authorization:`Bearer ${getAccessToken()}`
+      Authorization: `Bearer ${getAccessToken()}`,
     },
   });
 

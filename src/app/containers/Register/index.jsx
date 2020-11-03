@@ -69,6 +69,7 @@ export const Register = () => {
               required: true,
               message: 'Please input your Password!',
             },
+            { min: 6, message: 'Must be minimum 6 characters!' },
           ]}
         >
           <Input.Password
