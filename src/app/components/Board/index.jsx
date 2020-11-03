@@ -1,15 +1,15 @@
+import {
+  DeleteOutlined,
+  EditOutlined,
+  FieldTimeOutlined,
+  LinkOutlined,
+} from '@ant-design/icons';
+import Popconfirm from 'app/components/Popconfirm';
+import Tooltip from 'app/components/Tooltip';
 import React from 'react';
 import { StyledBoard } from './styles';
-import {
-  CopyOutlined,
-  LinkOutlined,
-  DeleteOutlined,
-  FieldTimeOutlined,
-} from '@ant-design/icons';
-import Tooltip from 'app/components/Tooltip';
-import Popconfirm from 'app/components/Popconfirm';
 
-const Board = ({ name, id, time, handleDelete, ...rest }) => {
+const Board = ({ name, id, time, handleDelete, handleEdit, ...rest }) => {
   return (
     <StyledBoard
       {...rest}
@@ -18,8 +18,8 @@ const Board = ({ name, id, time, handleDelete, ...rest }) => {
           <LinkOutlined key="url" />
         </Tooltip>,
 
-        <Tooltip placement="bottom" title="Clone">
-          <CopyOutlined key="copy" />
+        <Tooltip placement="bottom" title="Edit">
+          <EditOutlined key="edit" onClick={() => handleEdit({ id, name })} />
         </Tooltip>,
 
         <Popconfirm

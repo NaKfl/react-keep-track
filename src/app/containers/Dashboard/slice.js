@@ -9,6 +9,7 @@ const initialState = {
     get: '',
     create: '',
     delete: '',
+    edit: '',
   },
   error: null,
 };
@@ -58,10 +59,25 @@ const dashboardSlice = createSlice({
       return set('status.delete', ACTION_STATUS.SUCCESS)(state);
     },
 
-    deleteBoardFailed(state, action) {
+    editBoardFailed(state, action) {
       return flow(
         set('error', action.payload),
-        set('status.delete', ACTION_STATUS.FAILED),
+        set('status.edit', ACTION_STATUS.FAILED),
+      )(state);
+    },
+
+    editBoard(state) {
+      return flow(set('status.edit', ACTION_STATUS.PENDING))(state);
+    },
+
+    editBoardSuccess(state) {
+      return set('status.edit', ACTION_STATUS.SUCCESS)(state);
+    },
+
+    editBoardFailed(state, action) {
+      return flow(
+        set('error', action.payload),
+        set('status.edit', ACTION_STATUS.FAILED),
       )(state);
     },
   },

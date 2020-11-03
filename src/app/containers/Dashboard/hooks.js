@@ -8,11 +8,12 @@ import Form from 'app/components/Form';
 
 const useHooks = () => {
   const boards = useSelector(makeSelectDashboardBoards);
-  const { getBoards, createBoard, deleteBoard } = useActions(
+  const { getBoards, createBoard, deleteBoard, editBoard } = useActions(
     {
       getBoards: actions.getBoards,
       createBoard: actions.createBoard,
       deleteBoard: actions.deleteBoard,
+      editBoard: actions.editBoard,
     },
     [actions],
   );
@@ -47,16 +48,51 @@ const useHooks = () => {
     [deleteBoard],
   );
 
+  const [editModalVisible, setEditModalVisible] = useState(false);
+
+  const [editedBoard, setEditedBoard] = useState(null);
+
+  const handleEdit = useCallback(
+    editedBoard => {
+      setEditModalVisible(true);
+      setEditedBoard(editedBoard);
+    },
+    [setEditModalVisible, setEditedBoard],
+  );
+
+  const [editForm] = Form.useForm();
+
+  const hideEditModal = useCallback(() => {
+    setEditModalVisible(false);
+  }, [setEditModalVisible, editForm]);
+
+  const onEditFinish = useCallback(
+    values => {
+      editBoard({ id: editedBoard.id, name: values.name });
+      hideEditModal();
+    },
+    [editedBoard, hideEditModal, editForm, editBoard],
+  );
+
+  useEffect(() => editForm.resetFields(), [editedBoard, editForm]);
+
   return {
-    handlers: { showModal, handleDelete },
+    handlers: { showModal, handleEdit, handleDelete },
     selectors: {
       boards,
+      editedBoard,
     },
-    modal: {
+    createModal: {
       visible,
       onFinish,
       form,
       onCancel: hideModal,
+    },
+    editModal: {
+      visible: editModalVisible,
+      onFinish: onEditFinish,
+      form: editForm,
+      onCancel: hideEditModal,
     },
   };
 };

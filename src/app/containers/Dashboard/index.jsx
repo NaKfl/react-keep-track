@@ -7,14 +7,14 @@ import { useInjectReducer, useInjectSaga } from 'utils/reduxInjectors';
 import useHooks from './hooks';
 import saga from './saga';
 import { reducer, sliceKey } from './slice';
-import { StyledDashboard, StyledModal } from './styles';
+import { StyledDashboard, StyledModal, StyledEditModal } from './styles';
 
 export const Dashboard = () => {
   useInjectSaga({ key: sliceKey, saga });
   useInjectReducer({ key: sliceKey, reducer });
-  const { handlers, selectors, modal } = useHooks();
-  const { showModal, handleDelete } = handlers;
-  const { boards } = selectors;
+  const { handlers, selectors, createModal, editModal } = useHooks();
+  const { showModal, handleEdit, handleDelete } = handlers;
+  const { boards, editedBoard } = selectors;
 
   return (
     <StyledDashboard>
@@ -28,10 +28,12 @@ export const Dashboard = () => {
             name={name}
             time={moment(createAt).format('D MMMM')}
             handleDelete={handleDelete}
+            handleEdit={handleEdit}
           />
         ))}
       </div>
-      <StyledModal {...modal} />
+      <StyledModal {...createModal} />
+      <StyledEditModal {...editModal} editedBoard={editedBoard} />
     </StyledDashboard>
   );
 };

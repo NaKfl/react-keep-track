@@ -31,3 +31,14 @@ export const deleteBoard = id => {
     .then(data => ({ response: data }))
     .catch(handleGeneralError);
 };
+
+export const editBoard = ({ id, name }) => {
+  return request(BASE_URL, {
+    url: `boards/${id}`,
+    method: 'PUT',
+    data: { name },
+  })
+    .then(response => response.data)
+    .then(data => ({ response: data }))
+    .catch(handleGeneralError);
+};

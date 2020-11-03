@@ -1,4 +1,9 @@
-import { getBoards, createBoard, deleteBoard } from 'fetchers/dashboardFetcher';
+import {
+  getBoards,
+  createBoard,
+  deleteBoard,
+  editBoard,
+} from 'fetchers/dashboardFetcher';
 import { all, call, fork, put, takeLatest } from 'redux-saga/effects';
 import { actions } from './slice';
 
@@ -55,10 +60,29 @@ function* deleteBoardTask(action) {
   }
 }
 
+function editBoardAPI(payload) {
+  return editBoard(payload);
+}
+
+function* editBoardWatcher() {
+  yield takeLatest(actions.editBoard, editBoardTask);
+}
+
+function* editBoardTask(action) {
+  const { response, error } = yield call(editBoardAPI, action.payload);
+  if (response) {
+    yield put(actions.editBoardSuccess(response.result));
+    yield getBoardsTask();
+  } else {
+    yield put(actions.editBoardFailed(error.data));
+  }
+}
+
 export default function* defaultSaga() {
   yield all([
     fork(getBoardsWatcher),
     fork(createBoardWatcher),
     fork(deleteBoardWatcher),
+    fork(editBoardWatcher),
   ]);
 }
