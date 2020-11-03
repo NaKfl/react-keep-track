@@ -3,7 +3,6 @@ import set from 'lodash/fp/set';
 import flow from 'lodash/fp/flow';
 import { ACTION_STATUS } from 'utils/constants';
 export const initialState = {
-  isAuthenticated: false,
   status: '',
   error: null,
 };
@@ -20,10 +19,7 @@ const registerSlice = createSlice({
     },
 
     registerSuccess(state) {
-      return flow(
-        set('isAuthenticated', true),
-        set('status', ACTION_STATUS.SUCCESS),
-      )(state);
+      return set('status', ACTION_STATUS.SUCCESS)(state);
     },
 
     registerFailed(state, action) {
@@ -31,6 +27,10 @@ const registerSlice = createSlice({
         set('error', action.payload),
         set('status', ACTION_STATUS.FAILED),
       )(state);
+    },
+
+    reset(state) {
+      return flow(set('error', null), set('status', ''))(state);
     },
   },
 });

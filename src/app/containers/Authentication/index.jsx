@@ -17,11 +17,11 @@ import Title from 'app/components/Title';
 import { MailOutlined, LockOutlined } from '@ant-design/icons';
 
 export const Login = () => {
-  useMessage();
   useInjectSaga({ key: sliceKey, saga });
   const { handlers, selectors } = useHooks();
   const { onFinish, onFinishFailed } = handlers;
   const { status } = selectors;
+  useMessage();
 
   return (
     <StyledLogin>

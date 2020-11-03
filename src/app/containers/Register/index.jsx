@@ -1,8 +1,8 @@
 import React, { memo } from 'react';
-import { useInjectSaga } from 'utils/reduxInjectors';
+import { useInjectSaga, useInjectReducer } from 'utils/reduxInjectors';
 import saga from './saga';
-import useHooks from './hooks';
-import { sliceKey } from './slice';
+import useHooks, { useMessage } from './hooks';
+import { sliceKey, reducer } from './slice';
 import { Link } from 'react-router-dom';
 import { StyledRegister } from './styles';
 import Form from 'app/components/Form';
@@ -15,12 +15,15 @@ import {
   MailOutlined,
   CheckSquareOutlined,
 } from '@ant-design/icons';
+import { ACTION_STATUS } from 'utils/constants';
 
 export const Register = () => {
   useInjectSaga({ key: sliceKey, saga });
+  useInjectReducer({ key: sliceKey, reducer });
   const { handlers, selectors } = useHooks();
   const { onFinish, onFinishFailed } = handlers;
-  const {} = selectors;
+  const { status } = selectors;
+  useMessage();
 
   return (
     <StyledRegister>
@@ -31,15 +34,15 @@ export const Register = () => {
       >
         <Title className="register-form-title">Register</Title>
         <Form.Item
-          name="username"
+          name="name"
           rules={[
             {
               required: true,
-              message: 'Please input your Username!',
+              message: 'Please input your Name!',
             },
           ]}
         >
-          <Input prefix={<UserOutlined />} placeholder="Username" />
+          <Input prefix={<UserOutlined />} placeholder="Name" />
         </Form.Item>
 
         <Form.Item
@@ -90,9 +93,7 @@ export const Register = () => {
                   return Promise.resolve();
                 }
 
-                return Promise.reject(
-                  'The two passwords that you entered do not match!',
-                );
+                return Promise.reject('Passwords do not match!');
               },
             }),
           ]}
@@ -105,7 +106,11 @@ export const Register = () => {
         </Form.Item>
 
         <Form.Item className="register-form-button register-form-button-local">
-          <Button type="primary" htmlType="submit">
+          <Button
+            type="primary"
+            htmlType="submit"
+            loading={status === ACTION_STATUS.PENDING}
+          >
             Register
           </Button>
         </Form.Item>

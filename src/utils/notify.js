@@ -12,6 +12,6 @@ export function notifySuccess(message) {
   notification.success({
     message: message,
     placement: 'topRight',
-    top: 0,
+    top: 64,
   });
 }
