@@ -2,7 +2,15 @@ import React from 'react';
 import Card from 'app/components/Card';
 import { StyledColumn, StyledColumnTitle, StyledAddButton } from './styles';
 
-const Column = ({ showCreateModal, id, name, color, cards, ...rest }) => {
+const Column = ({
+  showCreateModal,
+  handleDeleteCard,
+  id,
+  name,
+  color,
+  cards,
+  ...rest
+}) => {
   return (
     <StyledColumn {...rest}>
       <StyledColumnTitle color={color}>{name}</StyledColumnTitle>
@@ -10,8 +18,17 @@ const Column = ({ showCreateModal, id, name, color, cards, ...rest }) => {
         +
       </StyledAddButton>
       <div className="cards">
-        {cards.map(({ content }) => (
-          <Card color={color}>{content}</Card>
+        {cards.map(({ _id, content }) => (
+          <Card
+            columnId={id}
+            columnCards={cards}
+            cardId={_id}
+            color={color}
+            cards={cards}
+            handleDeleteCard={handleDeleteCard}
+          >
+            {content}
+          </Card>
         ))}
       </div>
     </StyledColumn>

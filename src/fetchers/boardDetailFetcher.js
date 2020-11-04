@@ -31,3 +31,14 @@ export const createCard = ({ updatedColumn, content }) => {
     .then(data => ({ response: data }))
     .catch(handleGeneralError);
 };
+
+export const deleteCard = ({ updatedColumn }) => {
+  return request(BASE_URL, {
+    url: `columns/${updatedColumn.id}`,
+    method: 'PUT',
+    data: { updatedColumn },
+  })
+    .then(response => response.data)
+    .then(data => ({ response: data }))
+    .catch(handleGeneralError);
+};

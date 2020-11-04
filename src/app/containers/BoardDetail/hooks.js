@@ -17,11 +17,12 @@ export const useHooks = id => {
   const data = useSelector(makeSelectBoardDetailData);
   const info = useSelector(makeSelectBoardDetailInfo);
 
-  const { getBoardInfo, getBoardDetail, createCard } = useActions(
+  const { getBoardInfo, getBoardDetail, createCard, deleteCard } = useActions(
     {
       getBoardInfo: actions.getBoardInfo,
       getBoardDetail: actions.getBoardDetail,
       createCard: actions.createCard,
+      deleteCard: actions.deleteCard,
     },
     [actions],
   );
@@ -55,11 +56,20 @@ export const useHooks = id => {
       hideCreateModal();
       createForm.resetFields();
     },
-    [hideCreateModal, updatedColumn, createForm],
+    [hideCreateModal, updatedColumn, createForm, id],
+  );
+
+  const handleDeleteCard = useCallback(
+    ({ columnId, cardId, cards }) => {
+      cards = cards.map(card => card._id);
+      cards.splice(cards.indexOf(cardId), 1);
+      deleteCard({ id, updatedColumn: { id: columnId, cards } });
+    },
+    [id, deleteCard],
   );
 
   return {
-    handlers: { showCreateModal },
+    handlers: { showCreateModal, handleDeleteCard },
     selectors: { data, info },
     createModal: {
       visible: createModalVisible,

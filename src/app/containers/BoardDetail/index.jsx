@@ -18,7 +18,7 @@ export const BoardDetail = () => {
   useInjectSaga({ key: sliceKey, saga });
   useInjectReducer({ key: sliceKey, reducer });
   const { handlers, selectors, createModal } = useHooks(id);
-  const { showCreateModal } = handlers;
+  const { showCreateModal, handleDeleteCard } = handlers;
   const { data, info } = selectors;
   const {} = createModal;
 
@@ -29,6 +29,7 @@ export const BoardDetail = () => {
         showCreateModal={showCreateModal}
         key={_id}
         Column
+        handleDeleteCard={handleDeleteCard}
         {...props}
       ></Column>
     ));

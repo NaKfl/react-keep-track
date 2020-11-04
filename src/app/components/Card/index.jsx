@@ -1,10 +1,25 @@
 import React from 'react';
 import { StyledCard } from './styles';
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons';
 
-const Card = ({ children, color, ...rest }) => {
+const Card = ({
+  columnId,
+  handleDeleteCard,
+  cardId,
+  children,
+  color,
+  cards,
+  ...rest
+}) => {
   return (
     <StyledCard {...rest} color={color}>
-      {children}
+      <div className="content">{children}</div>
+      <div className="actions">
+        <EditOutlined />
+        <DeleteOutlined
+          onClick={() => handleDeleteCard({ columnId, cardId, cards })}
+        />
+      </div>
     </StyledCard>
   );
 };

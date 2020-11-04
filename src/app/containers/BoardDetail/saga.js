@@ -4,6 +4,7 @@ import {
   getBoardDetail,
   getBoardInfo,
   createCard,
+  deleteCard,
 } from 'fetchers/boardDetailFetcher';
 
 function* getBoardDetailWatcher() {
@@ -58,10 +59,29 @@ function createCardAPI(payload) {
   return createCard(payload);
 }
 
+function* deleteCardWatcher() {
+  yield takeLatest(actions.deleteCard, deleteCardTask);
+}
+
+function* deleteCardTask(action) {
+  const { response, error } = yield call(deleteCardAPI, action.payload);
+  if (response) {
+    yield getBoardDetailTask({ payload: action.payload.id });
+    yield put(actions.deleteCardSuccess());
+  } else {
+    yield put(actions.deleteCardFailed(error.data));
+  }
+}
+
+function deleteCardAPI(payload) {
+  return deleteCard(payload);
+}
+
 export default function* defaultSaga() {
   yield all([
     fork(getBoardDetailWatcher),
     fork(getBoardInfoWatcher),
     fork(createCardWatcher),
+    fork(deleteCardWatcher),
   ]);
 }
