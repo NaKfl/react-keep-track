@@ -4,6 +4,7 @@ import { StyledColumn, StyledColumnTitle, StyledAddButton } from './styles';
 
 const Column = ({
   showCreateModal,
+  showEditModal,
   handleDeleteCard,
   id,
   name,
@@ -20,6 +21,7 @@ const Column = ({
       <div className="cards">
         {cards.map(({ _id, content }) => (
           <Card
+            showEditModal={showEditModal}
             columnId={id}
             columnCards={cards}
             cardId={_id}

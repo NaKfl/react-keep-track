@@ -17,12 +17,19 @@ export const useHooks = id => {
   const data = useSelector(makeSelectBoardDetailData);
   const info = useSelector(makeSelectBoardDetailInfo);
 
-  const { getBoardInfo, getBoardDetail, createCard, deleteCard } = useActions(
+  const {
+    getBoardInfo,
+    getBoardDetail,
+    createCard,
+    deleteCard,
+    editCard,
+  } = useActions(
     {
       getBoardInfo: actions.getBoardInfo,
       getBoardDetail: actions.getBoardDetail,
       createCard: actions.createCard,
       deleteCard: actions.deleteCard,
+      editCard: actions.editCard,
     },
     [actions],
   );
@@ -68,14 +75,49 @@ export const useHooks = id => {
     [id, deleteCard],
   );
 
+  const [editModalVisible, setEditModalVisible] = useState(false);
+
+  const [editedCard, setEditedCard] = useState(null);
+
+  const hideEditModal = useCallback(() => {
+    setEditModalVisible(false);
+  }, [setEditModalVisible]);
+
+  const showEditModal = useCallback(
+    editedCard => {
+      setEditedCard(editedCard);
+      setEditModalVisible(true);
+    },
+    [setCreateModalVisible, setEditedCard],
+  );
+
+  const [editForm] = Form.useForm();
+
+  useEffect(() => editForm.resetFields(), [editedCard, editForm]);
+
+  const onEditFinish = useCallback(
+    ({ content }) => {
+      editCard({ id, data: { id: editedCard.id, content } });
+      hideEditModal();
+    },
+    [hideCreateModal, editedCard],
+  );
+
   return {
-    handlers: { showCreateModal, handleDeleteCard },
+    handlers: { showCreateModal, showEditModal, handleDeleteCard },
     selectors: { data, info },
     createModal: {
       visible: createModalVisible,
       onCancel: hideCreateModal,
       onFinish: onCreateFinish,
       form: createForm,
+    },
+    editModal: {
+      visible: editModalVisible,
+      onCancel: hideEditModal,
+      onFinish: onEditFinish,
+      form: editForm,
+      editedCard,
     },
   };
 };

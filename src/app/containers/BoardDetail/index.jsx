@@ -8,6 +8,7 @@ import { StyledBoardDetail } from './styles';
 import { useLocation } from 'react-router-dom';
 import { ACTION_STATUS } from 'utils/constants';
 import CreateCardModel from './CreateCardModel';
+import EditCardModel from './EditCardModel';
 
 import Title from 'app/components/Title';
 import Column from 'app/components/Column';
@@ -17,8 +18,8 @@ export const BoardDetail = () => {
 
   useInjectSaga({ key: sliceKey, saga });
   useInjectReducer({ key: sliceKey, reducer });
-  const { handlers, selectors, createModal } = useHooks(id);
-  const { showCreateModal, handleDeleteCard } = handlers;
+  const { handlers, selectors, createModal, editModal } = useHooks(id);
+  const { showCreateModal, showEditModal, handleDeleteCard } = handlers;
   const { data, info } = selectors;
   const {} = createModal;
 
@@ -27,6 +28,7 @@ export const BoardDetail = () => {
       <Column
         id={_id}
         showCreateModal={showCreateModal}
+        showEditModal={showEditModal}
         key={_id}
         Column
         handleDeleteCard={handleDeleteCard}
@@ -40,6 +42,7 @@ export const BoardDetail = () => {
       <Title>{`My boards/${info.name}`}</Title>
       <div className="columns">{renderBoardDetail(data)}</div>
       <CreateCardModel {...createModal} />
+      <EditCardModel {...editModal} />
     </StyledBoardDetail>
   );
 };

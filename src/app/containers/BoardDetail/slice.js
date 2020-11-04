@@ -12,6 +12,7 @@ export const initialState = {
     getData: '',
     createCard: '',
     deleteCard: '',
+    editCard: '',
   },
 };
 
@@ -94,6 +95,24 @@ const boardDetailSlice = createSlice({
       return flow(
         set('error', action.payload),
         set('status.deleteCard', ACTION_STATUS.FAILED),
+      )(state);
+    },
+
+    editCard(state) {
+      return flow(
+        set('error', null),
+        set('status.editCard', ACTION_STATUS.PENDING),
+      )(state);
+    },
+
+    editCardSuccess(state) {
+      return set('status.editCard', ACTION_STATUS.SUCCESS)(state);
+    },
+
+    editCardFailed(state, action) {
+      return flow(
+        set('error', action.payload),
+        set('status.editCard', ACTION_STATUS.FAILED),
       )(state);
     },
   },

@@ -42,3 +42,14 @@ export const deleteCard = ({ updatedColumn }) => {
     .then(data => ({ response: data }))
     .catch(handleGeneralError);
 };
+
+export const editCard = ({ data }) => {
+  return request(BASE_URL, {
+    url: `cards/${data.id}`,
+    method: 'PUT',
+    data: { content: data.content },
+  })
+    .then(response => response.data)
+    .then(data => ({ response: data }))
+    .catch(handleGeneralError);
+};
