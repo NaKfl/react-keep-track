@@ -9,7 +9,15 @@ import Tooltip from 'app/components/Tooltip';
 import React from 'react';
 import { StyledBoard } from './styles';
 
-const Board = ({ name, id, time, handleDelete, handleEdit, ...rest }) => {
+const Board = ({
+  name,
+  id,
+  time,
+  handleDelete,
+  handleClick,
+  handleEdit,
+  ...rest
+}) => {
   return (
     <StyledBoard
       {...rest}
@@ -35,6 +43,7 @@ const Board = ({ name, id, time, handleDelete, handleEdit, ...rest }) => {
       ]}
     >
       <StyledBoard.Meta
+        onClick={handleClick}
         title={name}
         description={
           <div className="description">

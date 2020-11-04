@@ -1,6 +1,7 @@
 import { Dashboard } from 'app/containers/Dashboard/Loadable';
 import { Login } from 'app/containers/Authentication/Loadable';
 import { Register } from 'app/containers/Register/Loadable';
+import { BoardDetail } from 'app/containers/BoardDetail/Loadable';
 
 export const routes = [
   {
@@ -20,5 +21,10 @@ export const authRoutes = [
     path: '/register',
     component: Register,
     key: 'register',
+  },
+  {
+    path: '/dashboard/:id',
+    component: BoardDetail,
+    key: 'board-detail',
   },
 ];

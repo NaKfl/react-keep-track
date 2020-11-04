@@ -8,6 +8,7 @@ import useHooks from './hooks';
 import saga from './saga';
 import { reducer, sliceKey } from './slice';
 import { StyledDashboard, StyledModal, StyledEditModal } from './styles';
+import { useHistory } from 'react-router-dom';
 
 export const Dashboard = () => {
   useInjectSaga({ key: sliceKey, saga });
@@ -15,22 +16,27 @@ export const Dashboard = () => {
   const { handlers, selectors, createModal, editModal } = useHooks();
   const { showModal, handleEdit, handleDelete } = handlers;
   const { boards, editedBoard } = selectors;
+  const history = useHistory();
 
   return (
     <StyledDashboard>
       <Title>My boards</Title>
       <div className="list">
         <AddBoardButton onClick={showModal} />
-        {boards.map(({ _id, name, createAt }) => (
-          <Board
-            key={_id}
-            id={_id}
-            name={name}
-            time={moment(createAt).format('D MMMM')}
-            handleDelete={handleDelete}
-            handleEdit={handleEdit}
-          />
-        ))}
+        {boards.map(board => {
+          const { _id, name, createAt } = board;
+          return (
+            <Board
+              key={_id}
+              id={_id}
+              name={name}
+              time={moment(createAt).format('D MMMM')}
+              handleDelete={handleDelete}
+              handleEdit={handleEdit}
+              handleClick={() => history.push(`/dashboard/${_id}`, { board })}
+            />
+          );
+        })}
       </div>
       <StyledModal {...createModal} />
       <StyledEditModal {...editModal} editedBoard={editedBoard} />
