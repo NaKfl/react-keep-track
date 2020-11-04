@@ -7,6 +7,7 @@ import { useInjectSaga } from 'utils/reduxInjectors';
 import { useLogout } from 'app/containers/Authentication/hooks';
 import sagaAuthentication from 'app/containers/Authentication/saga';
 import { sliceKey } from 'app/containers/Authentication/slice';
+import { Link } from 'react-router-dom';
 export const Header = () => {
   useInjectSaga({ key: sliceKey, saga: sagaAuthentication });
   const { handlers } = useLogout();
@@ -28,6 +29,9 @@ export const Header = () => {
           trigger={['click']}
           overlay={
             <Menu>
+              <Menu.Item>
+                <Link to="/profile">Profile</Link>
+              </Menu.Item>
               <Menu.Item onClick={onLogout}>Logout</Menu.Item>
             </Menu>
           }
