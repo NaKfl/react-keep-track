@@ -1,26 +1,114 @@
-import AddBoardButton from 'app/components/AddBoardButton';
-import Board from 'app/components/Board';
+import {
+  CheckSquareOutlined,
+  LockOutlined,
+  MailOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
+import Button from 'app/components/Button';
+import Form from 'app/components/Form';
+import Input from 'app/components/Input';
 import Title from 'app/components/Title';
-import moment from 'moment';
 import React, { memo } from 'react';
 import { useInjectReducer, useInjectSaga } from 'utils/reduxInjectors';
 import useHooks from './hooks';
 import saga from './saga';
 import { reducer, sliceKey } from './slice';
-import { StyledProfile, StyledModal, StyledEditModal } from './styles';
-import { useHistory } from 'react-router-dom';
+import { StyledProfile } from './styles';
 
 export const Profile = () => {
   useInjectSaga({ key: sliceKey, saga });
   useInjectReducer({ key: sliceKey, reducer });
-  const { handlers, selectors, createModal, editModal } = useHooks();
-  const { showModal, handleEdit, handleDelete } = handlers;
-  const { boards, editedBoard } = selectors;
-  const history = useHistory();
+  const { handlers, selectors } = useHooks();
+  const { setIsDisabled, onFinish } = handlers;
+  const { info, isDisabled, form } = selectors;
 
   return (
     <StyledProfile>
       <Title>Profile </Title>
+      <Form
+        className="register-form"
+        form={form}
+        onFinish={onFinish}
+        initialValues={info ? info : {}}
+      >
+        <Form.Item
+          name="name"
+          rules={[
+            {
+              required: true,
+              message: 'Please input your Name!',
+            },
+          ]}
+        >
+          <Input
+            prefix={<UserOutlined />}
+            placeholder="Name"
+            disabled={isDisabled}
+          />
+        </Form.Item>
+
+        <Form.Item
+          name="email"
+          rules={[
+            {
+              type: 'email',
+              message: 'The input is not valid E-mail!',
+            },
+            {
+              required: true,
+              message: 'Please input your Email!',
+            },
+          ]}
+        >
+          <Input prefix={<MailOutlined />} placeholder="Email" disabled />
+        </Form.Item>
+
+        <Form.Item
+          name="password"
+          hasFeedback
+          rules={[{ min: 6, message: 'Must be minimum 6 characters!' }]}
+        >
+          <Input.Password
+            prefix={<LockOutlined />}
+            type="password"
+            placeholder="Password"
+            disabled={isDisabled}
+          />
+        </Form.Item>
+
+        <Form.Item
+          name="confirm"
+          dependencies={['password']}
+          hasFeedback
+          rules={[
+            ({ getFieldValue }) => ({
+              validator(rule, value) {
+                if (!value || getFieldValue('password') === value) {
+                  return Promise.resolve();
+                }
+
+                return Promise.reject('Passwords do not match!');
+              },
+            }),
+          ]}
+        >
+          <Input.Password
+            prefix={<CheckSquareOutlined />}
+            type="password"
+            placeholder="Confirm Password"
+            disabled={isDisabled}
+          />
+        </Form.Item>
+
+        <Form.Item className="register-form-button register-form-button-local">
+          <Button type="primary" htmlType="submit" disabled={isDisabled}>
+            Submit
+          </Button>
+          <Button className="edit-button" onClick={() => setIsDisabled(false)}>
+            Edit
+          </Button>
+        </Form.Item>
+      </Form>
     </StyledProfile>
   );
 };

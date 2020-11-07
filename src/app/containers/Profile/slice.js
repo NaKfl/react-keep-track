@@ -4,77 +4,55 @@ import set from 'lodash/fp/set';
 import { ACTION_STATUS } from 'utils/constants';
 
 const initialState = {
-  boards: [],
+  info: [],
   status: {
     get: '',
-    create: '',
-    delete: '',
     edit: '',
   },
   error: null,
 };
 
-const dashboardSlice = createSlice({
-  name: 'dashboard',
+const profileSlice = createSlice({
+  name: 'profile',
   initialState,
   reducers: {
-    getBoards(state) {
+    getProfile(state) {
       return flow(set('status.get', ACTION_STATUS.PENDING))(state);
     },
 
-    getBoardsSuccess(state, action) {
+    getProfileSuccess(state, action) {
       return flow(
-        set('boards', action.payload),
+        set('info', action.payload),
         set('status.get', ACTION_STATUS.SUCCESS),
       )(state);
     },
 
-    getBoardsFailed(state, action) {
+    getProfileFailed(state, action) {
       return flow(
         set('error', action.payload),
         set('status.get', ACTION_STATUS.FAILED),
       )(state);
     },
 
-    createBoard(state) {
-      return flow(set('status.create', ACTION_STATUS.PENDING))(state);
+    editProfile(state) {
+      return flow(set('status.edit', ACTION_STATUS.PENDING))(state);
     },
 
-    createBoardSuccess(state) {
-      return set('status.create', ACTION_STATUS.SUCCESS)(state);
-    },
-
-    createBoardFailed(state, action) {
-      return flow(
-        set('error', action.payload),
-        set('status.create', ACTION_STATUS.FAILED),
-      )(state);
-    },
-
-    deleteBoard(state) {
-      return flow(set('status.delete', ACTION_STATUS.PENDING))(state);
-    },
-
-    deleteBoardSuccess(state) {
-      return set('status.delete', ACTION_STATUS.SUCCESS)(state);
-    },
-
-    editBoardFailed(state, action) {
+    editProfileFailed(state, action) {
       return flow(
         set('error', action.payload),
         set('status.edit', ACTION_STATUS.FAILED),
       )(state);
     },
 
-    editBoard(state) {
-      return flow(set('status.edit', ACTION_STATUS.PENDING))(state);
+    editProfileSuccess(state, action) {
+      return flow(
+        set('info', action.payload),
+        set('status.get', ACTION_STATUS.SUCCESS),
+      )(state);
     },
 
-    editBoardSuccess(state) {
-      return set('status.edit', ACTION_STATUS.SUCCESS)(state);
-    },
-
-    editBoardFailed(state, action) {
+    editProfileFailed(state, action) {
       return flow(
         set('error', action.payload),
         set('status.edit', ACTION_STATUS.FAILED),
@@ -83,4 +61,4 @@ const dashboardSlice = createSlice({
   },
 });
 
-export const { actions, reducer, name: sliceKey } = dashboardSlice;
+export const { actions, reducer, name: sliceKey } = profileSlice;

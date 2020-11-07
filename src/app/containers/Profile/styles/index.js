@@ -1,5 +1,8 @@
 import styled from 'styled-components';
-import Modal from '../CreateBoardModal';
-import EditModal from '../EditBoardModal';
 
-export const StyledProfile = styled.div``;
+export const StyledProfile = styled.div`
+  max-width: 500px;
+  .edit-button {
+    margin-left: 10px;
+  }
+`;

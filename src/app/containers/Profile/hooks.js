@@ -2,97 +2,56 @@ import useActions from 'hooks/useActions';
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ACTION_STATUS } from 'utils/constants';
-import { makeSelectDashboardBoards } from './selectors';
+import { makeSelectProfileInfo } from './selectors';
 import { actions } from './slice';
 import Form from 'app/components/Form';
+import { getAuthInfo, removeAuthInfo } from 'utils/localStorageUtils';
 
 const useHooks = () => {
-  const boards = useSelector(makeSelectDashboardBoards);
-  const { getBoards, createBoard, deleteBoard, editBoard } = useActions(
+  const AuthenticationInfo = getAuthInfo();
+  let id = '';
+  if (AuthenticationInfo && AuthenticationInfo.user) {
+    id = AuthenticationInfo.user._id;
+  }
+
+  let info = useSelector(makeSelectProfileInfo);
+  info = { ...info, password: undefined, confirm: undefined };
+
+  const { getProfile, editProfile } = useActions(
     {
-      getBoards: actions.getBoards,
-      createBoard: actions.createBoard,
-      deleteBoard: actions.deleteBoard,
-      editBoard: actions.editBoard,
+      getProfile: actions.getProfile,
+      editProfile: actions.editProfile,
     },
     [actions],
   );
 
-  useEffect(() => getBoards(), [getBoards]);
+  useEffect(() => getProfile(id), [getProfile]);
 
-  const [visible, setVisible] = useState(false);
-
-  const showModal = useCallback(() => {
-    setVisible(true);
-  }, [setVisible]);
-
-  const hideModal = useCallback(() => {
-    setVisible(false);
-  }, [setVisible]);
-
-  const [form] = Form.useForm();
+  const [isDisabled, setIsDisabled] = useState(true);
 
   const onFinish = useCallback(
     values => {
-      createBoard(values);
-      hideModal();
-      form.resetFields();
+      delete values.email;
+      delete values.confirm;
+      editProfile({ id, ...values });
+      setIsDisabled(true);
+      if (values.password) {
+        removeAuthInfo();
+      }
     },
-    [createBoard, hideModal, form],
+    [editProfile, setIsDisabled],
   );
 
-  const handleDelete = useCallback(
-    id => {
-      deleteBoard(id);
-    },
-    [deleteBoard],
-  );
+  const [form] = Form.useForm();
 
-  const [editModalVisible, setEditModalVisible] = useState(false);
-
-  const [editedBoard, setEditedBoard] = useState(null);
-
-  const handleEdit = useCallback(
-    editedBoard => {
-      setEditModalVisible(true);
-      setEditedBoard(editedBoard);
-    },
-    [setEditModalVisible, setEditedBoard],
-  );
-
-  const [editForm] = Form.useForm();
-
-  const hideEditModal = useCallback(() => {
-    setEditModalVisible(false);
-  }, [setEditModalVisible, editForm]);
-
-  const onEditFinish = useCallback(
-    values => {
-      editBoard({ id: editedBoard.id, name: values.name });
-      hideEditModal();
-    },
-    [editedBoard, hideEditModal, editForm, editBoard],
-  );
-
-  useEffect(() => editForm.resetFields(), [editedBoard, editForm]);
+  useEffect(() => form.resetFields(), [info, form]);
 
   return {
-    handlers: { showModal, handleEdit, handleDelete },
+    handlers: { onFinish, setIsDisabled },
     selectors: {
-      boards,
-      editedBoard,
-    },
-    createModal: {
-      visible,
-      onFinish,
+      info,
+      isDisabled,
       form,
-      onCancel: hideModal,
-    },
-    editModal: {
-      visible: editModalVisible,
-      onFinish: onEditFinish,
-      form: editForm,
-      onCancel: hideEditModal,
     },
   };
 };

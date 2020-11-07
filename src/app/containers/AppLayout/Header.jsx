@@ -8,6 +8,7 @@ import { useLogout } from 'app/containers/Authentication/hooks';
 import sagaAuthentication from 'app/containers/Authentication/saga';
 import { sliceKey } from 'app/containers/Authentication/slice';
 import { Link } from 'react-router-dom';
+
 export const Header = () => {
   useInjectSaga({ key: sliceKey, saga: sagaAuthentication });
   const { handlers } = useLogout();
@@ -18,10 +19,9 @@ export const Header = () => {
       <div className="left">
         <div className="logo" />
         <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
-          <Menu.Item key="1">Dashboard</Menu.Item>
-          <Menu.Item key="2">Teams</Menu.Item>
-          <Menu.Item key="3">Analytics</Menu.Item>
-          <Menu.Item key="4">Billing</Menu.Item>
+          <Menu.Item key="1">
+            <Link to="/dashboard">Dashboard</Link>
+          </Menu.Item>
         </Menu>
       </div>
       <div className="right">

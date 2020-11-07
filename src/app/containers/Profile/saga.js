@@ -1,88 +1,41 @@
-import {
-  getBoards,
-  createBoard,
-  deleteBoard,
-  editBoard,
-} from 'fetchers/dashboardFetcher';
+import { getProfile, editProfile } from 'fetchers/profileFetcher';
 import { all, call, fork, put, takeLatest } from 'redux-saga/effects';
 import { actions } from './slice';
 
-function getBoardsAPI() {
-  return getBoards();
+function getProfileAPI(payload) {
+  return getProfile(payload);
 }
 
-function* getBoardsWatcher() {
-  yield takeLatest(actions.getBoards, getBoardsTask);
+function* getProfileWatcher() {
+  yield takeLatest(actions.getProfile, getProfileTask);
 }
 
-function* getBoardsTask() {
-  const { response, error } = yield call(getBoardsAPI);
+function* getProfileTask(action) {
+  const { response, error } = yield call(getProfileAPI, action.payload);
   if (response) {
-    yield put(actions.getBoardsSuccess(response.result));
+    yield put(actions.getProfileSuccess(response.result));
   } else {
-    yield put(actions.getBoardsFailed(error.data));
+    yield put(actions.getProfileFailed(error.data));
   }
 }
 
-function createBoardAPI(payload) {
-  return createBoard(payload);
+function editProfileAPI(payload) {
+  return editProfile(payload);
 }
 
-function* createBoardWatcher() {
-  yield takeLatest(actions.createBoard, createBoardTask);
+function* editProfileWatcher() {
+  yield takeLatest(actions.editProfile, editProfileTask);
 }
 
-function* createBoardTask(action) {
-  const { response, error } = yield call(createBoardAPI, action.payload);
+function* editProfileTask(action) {
+  const { response, error } = yield call(editProfileAPI, action.payload);
   if (response) {
-    yield put(actions.createBoardSuccess(response.result));
-    yield getBoardsTask();
+    yield put(actions.editProfileSuccess(response.result));
   } else {
-    yield put(actions.createBoardFailed(error.data));
-  }
-}
-
-function deleteBoardAPI(payload) {
-  return deleteBoard(payload);
-}
-
-function* deleteBoardWatcher() {
-  yield takeLatest(actions.deleteBoard, deleteBoardTask);
-}
-
-function* deleteBoardTask(action) {
-  const { response, error } = yield call(deleteBoardAPI, action.payload);
-  if (response) {
-    yield put(actions.deleteBoardSuccess(response.result));
-    yield getBoardsTask();
-  } else {
-    yield put(actions.deleteBoardFailed(error.data));
-  }
-}
-
-function editBoardAPI(payload) {
-  return editBoard(payload);
-}
-
-function* editBoardWatcher() {
-  yield takeLatest(actions.editBoard, editBoardTask);
-}
-
-function* editBoardTask(action) {
-  const { response, error } = yield call(editBoardAPI, action.payload);
-  if (response) {
-    yield put(actions.editBoardSuccess(response.result));
-    yield getBoardsTask();
-  } else {
-    yield put(actions.editBoardFailed(error.data));
+    yield put(actions.editProfileFailed(error.data));
   }
 }
 
 export default function* defaultSaga() {
-  yield all([
-    fork(getBoardsWatcher),
-    fork(createBoardWatcher),
-    fork(deleteBoardWatcher),
-    fork(editBoardWatcher),
-  ]);
+  yield all([fork(getProfileWatcher), fork(editProfileWatcher)]);
 }

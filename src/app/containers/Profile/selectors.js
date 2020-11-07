@@ -1,19 +1,24 @@
 import get from 'lodash/fp/get';
 import { createSelector } from 'reselect';
 
-const selectDashboardState = state => state.dashboard;
+const selectProfileState = state => state.profile;
 
-export const makeSelectDashboardBoards = createSelector(
-  selectDashboardState,
-  dashboard => get('boards', dashboard),
+export const makeSelectProfileInfo = createSelector(
+  selectProfileState,
+  profile => get('info', profile),
 );
 
-export const makeSelectDashboardStatus = createSelector(
-  selectDashboardState,
-  dashboard => get('status', dashboard),
+export const makeSelectEditProfileStatus = createSelector(
+  selectProfileState,
+  profile => get('status.edit', profile),
 );
 
-export const makeSelectDashboardError = createSelector(
-  selectDashboardState,
-  dashboard => get('error', dashboard),
+export const makeSelectGetProfileStatus = createSelector(
+  selectProfileState,
+  profile => get('status.get', profile),
+);
+
+export const makeSelectProfileError = createSelector(
+  selectProfileState,
+  profile => get('error', profile),
 );
