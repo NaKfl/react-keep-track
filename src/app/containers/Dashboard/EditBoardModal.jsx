@@ -23,7 +23,7 @@ const EditBoardModal = ({
             Cancel
           </Button>,
           <Button
-            form="create-form"
+            form="edit-form"
             key="submit"
             type="primary"
             htmlType="submit"
@@ -35,7 +35,7 @@ const EditBoardModal = ({
       >
         <Form
           form={form}
-          id="create-form"
+          id="edit-form"
           onFinish={onFinish}
           initialValues={{ name: editedBoard ? editedBoard.name : '' }}
         >

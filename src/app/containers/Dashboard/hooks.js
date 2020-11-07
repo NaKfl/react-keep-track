@@ -64,14 +64,14 @@ const useHooks = () => {
 
   const hideEditModal = useCallback(() => {
     setEditModalVisible(false);
-  }, [setEditModalVisible, editForm]);
+  }, [setEditModalVisible]);
 
   const onEditFinish = useCallback(
     values => {
       editBoard({ id: editedBoard.id, name: values.name });
       hideEditModal();
     },
-    [editedBoard, hideEditModal, editForm, editBoard],
+    [editedBoard, hideEditModal, editBoard],
   );
 
   useEffect(() => editForm.resetFields(), [editedBoard, editForm]);

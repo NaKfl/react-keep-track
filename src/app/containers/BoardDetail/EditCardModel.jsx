@@ -16,7 +16,7 @@ const EditCardModel = ({ editedCard, onFinish, onCancel, form, ...rest }) => {
             Cancel
           </Button>,
           <Button
-            form="create-form"
+            form="edit-form"
             key="submit"
             type="primary"
             htmlType="submit"
@@ -28,7 +28,7 @@ const EditCardModel = ({ editedCard, onFinish, onCancel, form, ...rest }) => {
       >
         <Form
           form={form}
-          id="create-form"
+          id="edit-form"
           onFinish={onFinish}
           initialValues={{ content: editedCard ? editedCard.content : '' }}
         >
