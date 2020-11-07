@@ -13,6 +13,7 @@ export const initialState = {
     createCard: '',
     deleteCard: '',
     editCard: '',
+    updateIndexCard: '',
   },
 };
 
@@ -113,6 +114,24 @@ const boardDetailSlice = createSlice({
       return flow(
         set('error', action.payload),
         set('status.editCard', ACTION_STATUS.FAILED),
+      )(state);
+    },
+
+    updateIndexCard(state) {
+      return flow(
+        set('error', null),
+        set('status.updateIndexCard', ACTION_STATUS.PENDING),
+      )(state);
+    },
+
+    updateIndexCardSuccess(state) {
+      return set('status.updateIndexCard', ACTION_STATUS.SUCCESS)(state);
+    },
+
+    updateIndexCardFailed(state, action) {
+      return flow(
+        set('error', action.payload),
+        set('status.updateIndexCard', ACTION_STATUS.FAILED),
       )(state);
     },
   },

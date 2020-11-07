@@ -6,6 +6,7 @@ import {
   createCard,
   deleteCard,
   editCard,
+  updateIndexCard,
 } from 'fetchers/boardDetailFetcher';
 
 function* getBoardDetailWatcher() {
@@ -96,6 +97,24 @@ function editCardAPI(payload) {
   return editCard(payload);
 }
 
+function* updateIndexCardWatcher() {
+  yield takeLatest(actions.updateIndexCard, updateIndexCardTask);
+}
+
+function* updateIndexCardTask(action) {
+  const { response, error } = yield call(updateIndexCardAPI, action.payload);
+  if (response) {
+    yield getBoardDetailTask({ payload: action.payload.id });
+    yield put(actions.updateIndexCardSuccess());
+  } else {
+    yield put(actions.updateIndexCardFailed(error.data));
+  }
+}
+
+function updateIndexCardAPI(payload) {
+  return updateIndexCard(payload);
+}
+
 export default function* defaultSaga() {
   yield all([
     fork(getBoardDetailWatcher),
@@ -103,5 +122,6 @@ export default function* defaultSaga() {
     fork(createCardWatcher),
     fork(deleteCardWatcher),
     fork(editCardWatcher),
+    fork(updateIndexCardWatcher),
   ]);
 }

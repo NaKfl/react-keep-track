@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Card from 'app/components/Card';
+import { Droppable } from 'react-beautiful-dnd';
 import { StyledColumn, StyledColumnTitle, StyledAddButton } from './styles';
 
 const Column = ({
   showCreateModal,
   showEditModal,
   handleDeleteCard,
+  handleUpdateIndexCard,
   id,
   name,
   color,
@@ -13,26 +15,38 @@ const Column = ({
   ...rest
 }) => {
   return (
-    <StyledColumn {...rest}>
+    <StyledColumn>
       <StyledColumnTitle color={color}>{name}</StyledColumnTitle>
       <StyledAddButton onClick={() => showCreateModal({ id, cards })}>
         +
       </StyledAddButton>
-      <div className="cards">
-        {cards.map(({ _id, content }) => (
-          <Card
-            showEditModal={showEditModal}
-            columnId={id}
-            columnCards={cards}
-            cardId={_id}
-            color={color}
-            cards={cards}
-            handleDeleteCard={handleDeleteCard}
+      <Droppable droppableId={id}>
+        {provided => (
+          <div
+            className="cards"
+            {...rest}
+            {...provided.droppableProps}
+            ref={provided.innerRef}
           >
-            {content}
-          </Card>
-        ))}
-      </div>
+            {cards.map(({ _id, content, isDeleted, createdAt }, index) => (
+              <Card
+                key={_id}
+                showEditModal={showEditModal}
+                columnId={id}
+                columnCards={cards}
+                cardId={_id}
+                color={color}
+                cards={cards}
+                handleDeleteCard={handleDeleteCard}
+                index={index}
+              >
+                {content}
+              </Card>
+            ))}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
     </StyledColumn>
   );
 };

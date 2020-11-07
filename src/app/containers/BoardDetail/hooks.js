@@ -23,6 +23,7 @@ export const useHooks = id => {
     createCard,
     deleteCard,
     editCard,
+    updateIndexCard,
   } = useActions(
     {
       getBoardInfo: actions.getBoardInfo,
@@ -30,6 +31,7 @@ export const useHooks = id => {
       createCard: actions.createCard,
       deleteCard: actions.deleteCard,
       editCard: actions.editCard,
+      updateIndexCard: actions.updateIndexCard,
     },
     [actions],
   );
@@ -103,9 +105,87 @@ export const useHooks = id => {
     [hideCreateModal, editedCard],
   );
 
+  const handleUpdateIndexCard = useCallback(
+    ({ columnId, cardIds }) => {
+      updateIndexCard({ id, updatedColumn: { id: columnId, cards: cardIds } });
+    },
+    [updateIndexCard],
+  );
+
+  const [columns, setColumns] = useState([]);
+
+  useEffect(() => {
+    setColumns(data);
+  }, [data, setColumns]);
+
+  const onDragEnd = ({ source, destination }) => {
+    if (destination === undefined || destination === null) return null;
+    if (
+      source.droppableId === destination.droppableId &&
+      destination.index === source.index
+    )
+      return null;
+
+    const start = columns.find(column => column._id === source.droppableId);
+    const end = columns.find(column => column._id === destination.droppableId);
+
+    if (start._id === end._id) {
+      const clone = start.cards.filter((_, idx) => idx !== source.index);
+      clone.splice(destination.index, 0, start.cards[source.index]);
+
+      const newCol = { ...start, cards: clone };
+
+      const ids = clone.map(card => card._id);
+      handleUpdateIndexCard({ columnId: start._id, cardIds: ids });
+
+      setColumns(state => {
+        const temp = state.filter(({ _id }) => _id !== start._id);
+        const pos = state.findIndex(({ _id }) => _id === start._id);
+        temp.splice(pos, 0, newCol);
+        return temp;
+      });
+      return null;
+    } else {
+      const newStartCards = start.cards.filter(
+        (_, idx) => idx !== source.index,
+      );
+      const newColStart = { ...start, cards: newStartCards };
+
+      let ids = newStartCards.map(card => card._id);
+      handleUpdateIndexCard({ columnId: start._id, cardIds: ids });
+
+      const newEndCards = [...end.cards];
+      newEndCards.splice(destination.index, 0, start.cards[source.index]);
+      const newColEnd = { ...end, cards: newEndCards };
+
+      ids = newEndCards.map(card => card._id);
+      handleUpdateIndexCard({ columnId: end._id, cardIds: ids });
+
+      setColumns(state => {
+        const temp = state.filter(({ _id }) => _id !== start._id);
+        const pos = state.findIndex(({ _id }) => _id === start._id);
+        temp.splice(pos, 0, newColStart);
+        return temp;
+      });
+
+      setColumns(state => {
+        let temp = state.filter(({ _id }) => _id !== end._id);
+        let pos = state.findIndex(({ _id }) => _id === end._id);
+        temp.splice(pos, 0, newColEnd);
+        return temp;
+      });
+      return null;
+    }
+  };
+
   return {
-    handlers: { showCreateModal, showEditModal, handleDeleteCard },
-    selectors: { data, info },
+    handlers: {
+      showCreateModal,
+      showEditModal,
+      handleDeleteCard,
+      onDragEnd,
+    },
+    selectors: { data, info, columns },
     createModal: {
       visible: createModalVisible,
       onCancel: hideCreateModal,

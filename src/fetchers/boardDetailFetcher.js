@@ -53,3 +53,14 @@ export const editCard = ({ data }) => {
     .then(data => ({ response: data }))
     .catch(handleGeneralError);
 };
+
+export const updateIndexCard = ({ updatedColumn }) => {
+  return request(BASE_URL, {
+    url: `columns/${updatedColumn.id}`,
+    method: 'PUT',
+    data: { updatedColumn },
+  })
+    .then(response => response.data)
+    .then(data => ({ response: data }))
+    .catch(handleGeneralError);
+};

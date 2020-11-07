@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 import { useInjectSaga, useInjectReducer } from 'utils/reduxInjectors';
 import { useParams } from 'react-router-dom';
 import saga from './saga';
@@ -8,7 +8,9 @@ import { StyledBoardDetail } from './styles';
 import { useLocation } from 'react-router-dom';
 import { ACTION_STATUS } from 'utils/constants';
 import CreateCardModel from './CreateCardModel';
+import { DragDropContext } from 'react-beautiful-dnd';
 import EditCardModel from './EditCardModel';
+import cloneDeep from 'lodash/fp/cloneDeep';
 
 import Title from 'app/components/Title';
 import Column from 'app/components/Column';
@@ -19,18 +21,22 @@ export const BoardDetail = () => {
   useInjectSaga({ key: sliceKey, saga });
   useInjectReducer({ key: sliceKey, reducer });
   const { handlers, selectors, createModal, editModal } = useHooks(id);
-  const { showCreateModal, showEditModal, handleDeleteCard } = handlers;
-  const { data, info } = selectors;
+  const {
+    showCreateModal,
+    showEditModal,
+    handleDeleteCard,
+    onDragEnd,
+  } = handlers;
+  const { data, info, columns } = selectors;
   const {} = createModal;
 
   const renderBoardDetail = data => {
-    return data.map(({ _id, ...props }) => (
+    return data.map(({ _id, isDeleted, createdAt, ...props }) => (
       <Column
         id={_id}
         showCreateModal={showCreateModal}
         showEditModal={showEditModal}
         key={_id}
-        Column
         handleDeleteCard={handleDeleteCard}
         {...props}
       ></Column>
@@ -40,9 +46,11 @@ export const BoardDetail = () => {
   return (
     <StyledBoardDetail>
       <Title>{`My boards/${info.name}`}</Title>
-      <div className="columns">{renderBoardDetail(data)}</div>
-      <CreateCardModel {...createModal} />
-      <EditCardModel {...editModal} />
+      <DragDropContext onDragEnd={onDragEnd}>
+        <div className="columns">{renderBoardDetail(columns)}</div>
+        <CreateCardModel {...createModal} />
+        <EditCardModel {...editModal} />
+      </DragDropContext>
     </StyledBoardDetail>
   );
 };
