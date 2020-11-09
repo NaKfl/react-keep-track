@@ -29,6 +29,16 @@ export const getAccessToken = () => {
   return !isNil(authInfo) ? authInfo.token.accessToken : '';
 };
 
+export const getRefreshToken = () => {
+  const authInfo = getAuthInfo();
+  return !isNil(authInfo) ? authInfo.token.refreshToken : '';
+};
+
+export const getEmailUser = () => {
+  const authInfo = getAuthInfo();
+  return !isNil(authInfo) ? authInfo.user.email : '';
+};
+
 export const isAuthenticated = () => {
   const authInfo = getAuthInfo();
   return !isNil(authInfo);

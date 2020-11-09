@@ -33,6 +33,27 @@ const authenticationSlice = createSlice({
       )(state);
     },
 
+    loginService(state) {
+      return flow(
+        set('error', null),
+        set('status', ACTION_STATUS.PENDING),
+      )(state);
+    },
+
+    loginServiceSuccess(state) {
+      return flow(
+        set('isAuthenticated', true),
+        set('status', ACTION_STATUS.SUCCESS),
+      )(state);
+    },
+
+    loginServiceFailed(state, action) {
+      return flow(
+        set('error', action.payload),
+        set('status', ACTION_STATUS.FAILED),
+      )(state);
+    },
+
     logout(state) {
       return state;
     },

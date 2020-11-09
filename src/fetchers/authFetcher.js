@@ -26,3 +26,16 @@ export const register = payload => {
     .then(data => ({ response: data }))
     .catch(handleGeneralError);
 };
+
+export const google = payload => {
+  return request(BASE_URL, {
+    url: 'auth/google',
+    method: 'POST',
+    data: {
+      access_token: payload,
+    },
+  })
+    .then(response => response.data)
+    .then(data => ({ response: data }))
+    .catch(handleGeneralError);
+};

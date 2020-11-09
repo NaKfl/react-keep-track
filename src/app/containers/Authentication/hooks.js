@@ -14,7 +14,10 @@ import { notifyError, notifySuccess } from 'utils/notify';
 
 export const useHooks = () => {
   const history = useHistory();
-  const { login } = useActions({ login: actions.login }, [actions]);
+  const { login, loginService } = useActions(
+    { login: actions.login, loginService: actions.loginService },
+    [actions],
+  );
   const isAuthenticated = useSelector(makeSelectIsAuthenticated);
   const status = useSelector(makeSelectAuthenticationStatus);
 
@@ -35,8 +38,15 @@ export const useHooks = () => {
     console.log('Failed: ', errorInfo);
   }, []);
 
+  const handleLoginService = useCallback(
+    payload => {
+      loginService(payload);
+    },
+    [loginService],
+  );
+
   return {
-    handlers: { onFinish, onFinishFailed },
+    handlers: { onFinish, onFinishFailed, handleLoginService },
     selectors: { status },
   };
 };

@@ -6,8 +6,10 @@ import { makeSelectProfileInfo } from './selectors';
 import { actions } from './slice';
 import Form from 'app/components/Form';
 import { getAuthInfo, removeAuthInfo } from 'utils/localStorageUtils';
+import { useLogout } from 'app/containers/Authentication/hooks';
 
 const useHooks = () => {
+  const { onLogout } = useLogout().handlers;
   const AuthenticationInfo = getAuthInfo();
   let id = '';
   if (AuthenticationInfo && AuthenticationInfo.user) {
@@ -36,7 +38,7 @@ const useHooks = () => {
       editProfile({ id, ...values });
       setIsDisabled(true);
       if (values.password) {
-        removeAuthInfo();
+        onLogout();
       }
     },
     [editProfile, setIsDisabled],

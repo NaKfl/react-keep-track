@@ -12,6 +12,12 @@ export const StyledGoogleButton = styled(Button)`
     color: ${COLOR.WHITE};
     opacity: 0.8;
   }
+
+  &:focus {
+    background-color: ${COLOR.GOOGLE};
+    color: ${COLOR.WHITE};
+    opacity: 0.8;
+  }
 `;
 
 export const StyledFacebookButton = styled(Button)`
@@ -20,6 +26,12 @@ export const StyledFacebookButton = styled(Button)`
   border: none;
 
   &:hover {
+    background-color: ${COLOR.FACEBOOK};
+    color: ${COLOR.WHITE};
+    opacity: 0.8;
+  }
+
+  &:focus {
     background-color: ${COLOR.FACEBOOK};
     color: ${COLOR.WHITE};
     opacity: 0.8;
