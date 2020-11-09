@@ -100,7 +100,12 @@ export const Login = () => {
           appId="703530593917463"
           fields="name,email,picture"
           // onClick={(res)=>console.log(res)}
-          callback={res => console.log(res)}
+          callback={receivedData =>
+            handleLoginService({
+              service: 'facebook',
+              data: receivedData && receivedData.accessToken,
+            })
+          }
           render={renderProps => (
             <StyledFacebookButton
               className="login-form-button"
