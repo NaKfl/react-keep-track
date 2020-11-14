@@ -1,19 +1,20 @@
+import Form from 'app/components/Form';
 import useActions from 'hooks/useActions';
-import { useCallback, useEffect, useState } from 'react';
 import get from 'lodash/fp/get';
+import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ACTION_STATUS } from 'utils/constants';
 import { notifyError, notifySuccess } from 'utils/notify';
 import {
   makeSelectDashboardBoards,
+  makeSelectDashboardError,
   makeSelectDashboardStatusCreate,
+  makeSelectDashboardStatusDelete,
   makeSelectDashboardStatusEdit,
   makeSelectDashboardStatusGet,
-  makeSelectDashboardStatusDelete,
-  makeSelectDashboardError,
 } from './selectors';
+import socket from 'utils/socket';
 import { actions } from './slice';
-import Form from 'app/components/Form';
 
 const useHooks = () => {
   const boards = useSelector(makeSelectDashboardBoards);
@@ -81,6 +82,7 @@ const useHooks = () => {
   const onEditFinish = useCallback(
     values => {
       editBoard({ id: editedBoard.id, name: values.name });
+      socket.emit('client-edit-board-name', { id: editedBoard.id });
       hideEditModal();
     },
     [editedBoard, hideEditModal, editBoard],

@@ -3,6 +3,7 @@ import useActions from 'hooks/useActions';
 import get from 'lodash/fp/get';
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { WEB_API as BASE_URL } from 'configs';
 import { ACTION_STATUS } from 'utils/constants';
 import { notifyError, notifySuccess } from 'utils/notify';
 import {
@@ -14,6 +15,7 @@ import {
   makeSelectBoardDetailStatusEdit,
 } from './selectors';
 import { actions } from './slice';
+import socket from 'utils/socket';
 
 export const useHooks = id => {
   const data = useSelector(makeSelectBoardDetailData);
@@ -37,6 +39,11 @@ export const useHooks = id => {
     },
     [actions],
   );
+
+  useEffect(() => {
+    socket.on('server-send-board-detail', data => getBoardDetail(data.id));
+    socket.on('server-send-board-info', data => getBoardInfo(data.id));
+  }, [getBoardDetail, getBoardInfo]);
 
   useEffect(() => {
     getBoardInfo(id);
@@ -64,6 +71,7 @@ export const useHooks = id => {
   const onCreateFinish = useCallback(
     ({ content }) => {
       createCard({ id, updatedColumn, content });
+      socket.emit('client-change-board-detail', { id });
       hideCreateModal();
       createForm.resetFields();
     },
@@ -75,6 +83,7 @@ export const useHooks = id => {
       cards = cards.map(card => card._id);
       cards.splice(cards.indexOf(cardId), 1);
       deleteCard({ id, updatedColumn: { id: columnId, cards } });
+      socket.emit('client-change-board-detail', { id });
     },
     [id, deleteCard],
   );
@@ -102,6 +111,7 @@ export const useHooks = id => {
   const onEditFinish = useCallback(
     ({ content }) => {
       editCard({ id, data: { id: editedCard.id, content } });
+      socket.emit('client-change-board-detail', { id });
       hideEditModal();
     },
     [hideEditModal, editedCard, id, editCard],
@@ -138,7 +148,7 @@ export const useHooks = id => {
       const newCol = { ...start, cards: clone };
 
       const ids = clone.map(card => card._id);
-      handleUpdateIndexCard({ columnId: start._id, cardIds: ids });
+      socket.emit('client-change-board-detail', { id });
 
       setColumns(state => {
         const temp = state.filter(({ _id }) => _id !== start._id);
@@ -146,6 +156,8 @@ export const useHooks = id => {
         temp.splice(pos, 0, newCol);
         return temp;
       });
+
+      handleUpdateIndexCard({ columnId: start._id, cardIds: ids });
       return null;
     } else {
       const newStartCards = start.cards.filter(
@@ -176,6 +188,8 @@ export const useHooks = id => {
         temp.splice(pos, 0, newColEnd);
         return temp;
       });
+
+      socket.emit('client-change-board-detail', { id });
       return null;
     }
   };

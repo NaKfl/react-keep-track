@@ -74,12 +74,6 @@ const dashboardSlice = createSlice({
       return set('status.edit', ACTION_STATUS.SUCCESS)(state);
     },
 
-    editBoardFailed(state, action) {
-      return flow(
-        set('error', action.payload),
-        set('status.edit', ACTION_STATUS.FAILED),
-      )(state);
-    },
     reset(state) {
       return flow(
         set('error', null),
