@@ -80,6 +80,15 @@ const dashboardSlice = createSlice({
         set('status.edit', ACTION_STATUS.FAILED),
       )(state);
     },
+    reset(state) {
+      return flow(
+        set('error', null),
+        set('status.get', ''),
+        set('status.create', ''),
+        set('status.edit', ''),
+        set('status.delete', ''),
+      )(state);
+    },
   },
 });
 

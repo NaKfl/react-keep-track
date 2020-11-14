@@ -54,18 +54,26 @@ export const useHooks = () => {
 export const useMessage = () => {
   const status = useSelector(makeSelectAuthenticationStatus);
   const error = useSelector(makeSelectAuthenticationError);
+  const { reset } = useActions(
+    {
+      reset: actions.reset,
+    },
+    [actions],
+  );
 
   useEffect(() => {
     if (error && get('message', error)) {
       notifyError(error.message);
+      reset();
     }
-  }, [error]);
+  }, [error, reset]);
 
   useEffect(() => {
     if (status === ACTION_STATUS.SUCCESS) {
       notifySuccess('Login successful');
+      reset();
     }
-  }, [status]);
+  }, [status, reset]);
 };
 
 export const useLogout = () => {

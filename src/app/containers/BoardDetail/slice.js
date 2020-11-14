@@ -134,6 +134,18 @@ const boardDetailSlice = createSlice({
         set('status.updateIndexCard', ACTION_STATUS.FAILED),
       )(state);
     },
+
+    reset(state) {
+      return flow(
+        set('error', null),
+        set('status.getInfo', ''),
+        set('status.getData', ''),
+        set('status.createCard', ''),
+        set('status.deleteCard', ''),
+        set('status.editCard', ''),
+        set('status.updateIndexCard', ''),
+      )(state);
+    },
   },
 });
 

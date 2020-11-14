@@ -1,23 +1,18 @@
-import React, { memo, useState, useEffect } from 'react';
-import { useInjectSaga, useInjectReducer } from 'utils/reduxInjectors';
-import { useParams } from 'react-router-dom';
-import saga from './saga';
-import useHooks, { useMessage } from './hooks';
-import { sliceKey, reducer } from './slice';
-import { StyledBoardDetail } from './styles';
-import { useLocation } from 'react-router-dom';
-import { ACTION_STATUS } from 'utils/constants';
-import CreateCardModel from './CreateCardModel';
-import { DragDropContext } from 'react-beautiful-dnd';
-import EditCardModel from './EditCardModel';
-import cloneDeep from 'lodash/fp/cloneDeep';
-
-import Title from 'app/components/Title';
 import Column from 'app/components/Column';
+import Title from 'app/components/Title';
+import React, { memo } from 'react';
+import { DragDropContext } from 'react-beautiful-dnd';
+import { useParams } from 'react-router-dom';
+import { useInjectReducer, useInjectSaga } from 'utils/reduxInjectors';
+import CreateCardModel from './CreateCardModel';
+import EditCardModel from './EditCardModel';
+import useHooks, { useMessage } from './hooks';
+import saga from './saga';
+import { reducer, sliceKey } from './slice';
+import { StyledBoardDetail } from './styles';
 
 export const BoardDetail = () => {
   const { id } = useParams();
-
   useInjectSaga({ key: sliceKey, saga });
   useInjectReducer({ key: sliceKey, reducer });
   const { handlers, selectors, createModal, editModal } = useHooks(id);
@@ -27,8 +22,9 @@ export const BoardDetail = () => {
     handleDeleteCard,
     onDragEnd,
   } = handlers;
-  const { data, info, columns } = selectors;
-  const {} = createModal;
+  const { info, columns } = selectors;
+
+  useMessage();
 
   const renderBoardDetail = data => {
     return data.map(({ _id, isDeleted, createdAt, ...props }) => (

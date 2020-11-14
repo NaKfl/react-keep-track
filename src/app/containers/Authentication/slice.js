@@ -65,6 +65,10 @@ const authenticationSlice = createSlice({
         set('error', null),
       )(state);
     },
+
+    reset(state) {
+      return flow(set('error', null), set('status', ''))(state);
+    },
   },
 });
 

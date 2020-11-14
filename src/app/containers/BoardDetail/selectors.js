@@ -18,8 +18,26 @@ const makeSelectBoardDetailError = createSelector(
   boardDetail => get('error', boardDetail),
 );
 
+const makeSelectBoardDetailStatusCreate = createSelector(
+  selectBoardDetailState,
+  boardDetail => get('status.createCard', boardDetail),
+);
+
+const makeSelectBoardDetailStatusEdit = createSelector(
+  selectBoardDetailState,
+  boardDetail => get('status.editCard', boardDetail),
+);
+
+const makeSelectBoardDetailStatusDelete = createSelector(
+  selectBoardDetailState,
+  boardDetail => get('status.deleteCard', boardDetail),
+);
+
 export {
   makeSelectBoardDetailError,
   makeSelectBoardDetailData,
   makeSelectBoardDetailInfo,
+  makeSelectBoardDetailStatusCreate,
+  makeSelectBoardDetailStatusEdit,
+  makeSelectBoardDetailStatusDelete,
 };

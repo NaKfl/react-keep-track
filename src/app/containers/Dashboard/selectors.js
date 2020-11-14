@@ -8,9 +8,24 @@ export const makeSelectDashboardBoards = createSelector(
   dashboard => get('boards', dashboard),
 );
 
-export const makeSelectDashboardStatus = createSelector(
+export const makeSelectDashboardStatusCreate = createSelector(
   selectDashboardState,
-  dashboard => get('status', dashboard),
+  dashboard => get('status.create', dashboard),
+);
+
+export const makeSelectDashboardStatusEdit = createSelector(
+  selectDashboardState,
+  dashboard => get('status.edit', dashboard),
+);
+
+export const makeSelectDashboardStatusDelete = createSelector(
+  selectDashboardState,
+  dashboard => get('status.delete', dashboard),
+);
+
+export const makeSelectDashboardStatusGet = createSelector(
+  selectDashboardState,
+  dashboard => get('status.get', dashboard),
 );
 
 export const makeSelectDashboardError = createSelector(

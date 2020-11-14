@@ -2,7 +2,13 @@ import useActions from 'hooks/useActions';
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { ACTION_STATUS } from 'utils/constants';
-import { makeSelectProfileInfo } from './selectors';
+import { notifyError, notifySuccess } from 'utils/notify';
+import get from 'lodash/fp/get';
+import {
+  makeSelectProfileInfo,
+  makeSelectProfileError,
+  makeSelectEditProfileStatus,
+} from './selectors';
 import { actions } from './slice';
 import Form from 'app/components/Form';
 import { getAuthInfo, removeAuthInfo } from 'utils/localStorageUtils';
@@ -17,6 +23,8 @@ const useHooks = () => {
   }
 
   let info = useSelector(makeSelectProfileInfo);
+  const statusUpdate = useSelector(makeSelectEditProfileStatus);
+
   info = { ...info, password: undefined, confirm: undefined };
 
   const { getProfile, editProfile } = useActions(
@@ -41,7 +49,7 @@ const useHooks = () => {
         onLogout();
       }
     },
-    [editProfile, setIsDisabled],
+    [id, editProfile, setIsDisabled, onLogout],
   );
 
   const [form] = Form.useForm();
@@ -54,8 +62,35 @@ const useHooks = () => {
       info,
       isDisabled,
       form,
+      loading: statusUpdate === ACTION_STATUS.PENDING,
     },
   };
+};
+
+export const useMessage = () => {
+  const statusUpdate = useSelector(makeSelectEditProfileStatus);
+  const error = useSelector(makeSelectProfileError);
+
+  const { reset } = useActions(
+    {
+      reset: actions.reset,
+    },
+    [actions],
+  );
+
+  useEffect(() => {
+    if (error && get('message', error)) {
+      notifyError(error.message);
+      reset();
+    }
+  }, [error, reset]);
+
+  useEffect(() => {
+    if (statusUpdate === ACTION_STATUS.SUCCESS) {
+      notifySuccess('Update user profile successfully');
+      reset();
+    }
+  }, [statusUpdate, reset]);
 };
 
 export default useHooks;

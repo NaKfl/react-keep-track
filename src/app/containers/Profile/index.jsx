@@ -10,7 +10,7 @@ import Input from 'app/components/Input';
 import Title from 'app/components/Title';
 import React, { memo } from 'react';
 import { useInjectReducer, useInjectSaga } from 'utils/reduxInjectors';
-import useHooks from './hooks';
+import useHooks, { useMessage } from './hooks';
 import saga from './saga';
 import { reducer, sliceKey } from './slice';
 import { StyledProfile } from './styles';
@@ -20,7 +20,8 @@ export const Profile = () => {
   useInjectReducer({ key: sliceKey, reducer });
   const { handlers, selectors } = useHooks();
   const { setIsDisabled, onFinish } = handlers;
-  const { info, isDisabled, form } = selectors;
+  const { info, isDisabled, form, loading } = selectors;
+  useMessage();
 
   return (
     <StyledProfile>
@@ -101,7 +102,12 @@ export const Profile = () => {
         </Form.Item>
 
         <Form.Item className="register-form-button register-form-button-local">
-          <Button type="primary" htmlType="submit" disabled={isDisabled}>
+          <Button
+            type="primary"
+            htmlType="submit"
+            disabled={isDisabled}
+            loading={loading}
+          >
             Submit
           </Button>
           <Button className="edit-button" onClick={() => setIsDisabled(false)}>

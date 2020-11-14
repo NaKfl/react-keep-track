@@ -4,7 +4,7 @@ import Title from 'app/components/Title';
 import moment from 'moment';
 import React, { memo } from 'react';
 import { useInjectReducer, useInjectSaga } from 'utils/reduxInjectors';
-import useHooks from './hooks';
+import useHooks, { useMessage } from './hooks';
 import saga from './saga';
 import { reducer, sliceKey } from './slice';
 import { StyledDashboard, StyledModal, StyledEditModal } from './styles';
@@ -17,6 +17,7 @@ export const Dashboard = () => {
   const { showModal, handleEdit, handleDelete } = handlers;
   const { boards, editedBoard } = selectors;
   const history = useHistory();
+  useMessage();
 
   return (
     <StyledDashboard>

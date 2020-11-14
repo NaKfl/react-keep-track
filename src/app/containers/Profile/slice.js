@@ -48,14 +48,15 @@ const profileSlice = createSlice({
     editProfileSuccess(state, action) {
       return flow(
         set('info', action.payload),
-        set('status.get', ACTION_STATUS.SUCCESS),
+        set('status.edit', ACTION_STATUS.SUCCESS),
       )(state);
     },
 
-    editProfileFailed(state, action) {
+    reset(state) {
       return flow(
-        set('error', action.payload),
-        set('status.edit', ACTION_STATUS.FAILED),
+        set('error', null),
+        set('status.get', ''),
+        set('status.edit', ''),
       )(state);
     },
   },

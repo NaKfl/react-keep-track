@@ -1,17 +1,19 @@
-import useActions from 'hooks/useActions';
-import { useCallback, useEffect, useState, useRef } from 'react';
-import { useSelector } from 'react-redux';
-import { actions } from './slice';
-import { useHistory } from 'react-router-dom';
-import {
-  makeSelectBoardDetailError,
-  makeSelectBoardDetailData,
-  makeSelectBoardDetailInfo,
-} from './selectors';
-import { ACTION_STATUS } from 'utils/constants';
-import get from 'lodash/fp/get';
-import { notifyError, notifySuccess } from 'utils/notify';
 import Form from 'app/components/Form';
+import useActions from 'hooks/useActions';
+import get from 'lodash/fp/get';
+import { useCallback, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { ACTION_STATUS } from 'utils/constants';
+import { notifyError, notifySuccess } from 'utils/notify';
+import {
+  makeSelectBoardDetailData,
+  makeSelectBoardDetailError,
+  makeSelectBoardDetailInfo,
+  makeSelectBoardDetailStatusCreate,
+  makeSelectBoardDetailStatusDelete,
+  makeSelectBoardDetailStatusEdit,
+} from './selectors';
+import { actions } from './slice';
 
 export const useHooks = id => {
   const data = useSelector(makeSelectBoardDetailData);
@@ -65,7 +67,7 @@ export const useHooks = id => {
       hideCreateModal();
       createForm.resetFields();
     },
-    [hideCreateModal, updatedColumn, createForm, id],
+    [hideCreateModal, updatedColumn, createForm, id, createCard],
   );
 
   const handleDeleteCard = useCallback(
@@ -90,7 +92,7 @@ export const useHooks = id => {
       setEditedCard(editedCard);
       setEditModalVisible(true);
     },
-    [setCreateModalVisible, setEditedCard],
+    [setEditedCard, setEditModalVisible],
   );
 
   const [editForm] = Form.useForm();
@@ -102,14 +104,14 @@ export const useHooks = id => {
       editCard({ id, data: { id: editedCard.id, content } });
       hideEditModal();
     },
-    [hideCreateModal, editedCard],
+    [hideEditModal, editedCard, id, editCard],
   );
 
   const handleUpdateIndexCard = useCallback(
     ({ columnId, cardIds }) => {
       updateIndexCard({ id, updatedColumn: { id: columnId, cards: cardIds } });
     },
-    [updateIndexCard],
+    [updateIndexCard, id],
   );
 
   const [columns, setColumns] = useState([]);
@@ -202,21 +204,39 @@ export const useHooks = id => {
   };
 };
 
-// export const useMessage = () => {
-//   const status = useSelector(makeSelectRegisterStatus);
-//   const error = useSelector(makeSelectRegisterError);
+export const useMessage = () => {
+  const statusCreate = useSelector(makeSelectBoardDetailStatusCreate);
+  const statusEdit = useSelector(makeSelectBoardDetailStatusEdit);
+  const statusDelete = useSelector(makeSelectBoardDetailStatusDelete);
+  const error = useSelector(makeSelectBoardDetailError);
+  const { reset } = useActions(
+    {
+      reset: actions.reset,
+    },
+    [actions],
+  );
 
-//   useEffect(() => {
-//     if (error && get('message', error)) {
-//       notifyError(error.message);
-//     }
-//   }, [error]);
+  useEffect(() => {
+    if (error && get('message', error)) {
+      notifyError(error.message);
+      reset();
+    }
+  }, [error, reset]);
 
-//   useEffect(() => {
-//     if (status === ACTION_STATUS.SUCCESS) {
-//       notifySuccess('Register successful');
-//     }
-//   }, [status]);
-// };
+  useEffect(() => {
+    if (statusCreate === ACTION_STATUS.SUCCESS) {
+      notifySuccess('Create a card successful');
+      reset();
+    }
+    if (statusEdit === ACTION_STATUS.SUCCESS) {
+      notifySuccess('Edit a card successful');
+      reset();
+    }
+    if (statusDelete === ACTION_STATUS.SUCCESS) {
+      notifySuccess('Delete a card successful');
+      reset();
+    }
+  }, [statusCreate, statusEdit, statusDelete, reset]);
+};
 
 export default useHooks;
